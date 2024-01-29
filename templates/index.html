@@ -1,0 +1,349 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Index</title>
+    <link
+      rel="shortcut icon"
+      href="{% static '/images/djangoproject.svg' %}"
+      type="image/x-icon"
+    />
+
+    <!-- DAISYUI -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/daisyui@2.51.5/dist/full.css"
+      rel="stylesheet"
+      type="text/css"
+    />
+    <!---->
+
+    <!-- DATATABLES -->
+    <link
+      rel="stylesheet"
+      href="https://cdn.datatables.net/1.13.4/css/jquery.dataTables.min.css"
+    />
+    <!---->
+
+    <!-- TAILWINDCSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!---->
+    <!-- TAILWINDCSS CONFIGS -->
+    <script>
+      tailwind.config = {
+        theme: {
+          screens: {
+            sm: "300px",
+          }
+        }
+      }
+    </script>
+    <!---->
+
+    <!-- CUSTOM CSS -->
+    <link rel="stylesheet" href="{% static '/css/index.css' %}" />
+    <!---->
+  </head>
+  <body>
+    <!-- NAVBAR -->
+    <div class="navbar bg-black-200 text-white">
+      <div class="flex-1">
+        <a class="btn btn-ghost normal-case text-xl hidden">Django-Rest_Framework</a>
+      </div>
+      <div class="navbar-end pt-2">
+        <!-- CARRITO -->
+        <div class="indicator">
+          <!-- BOTON MODAL-->
+          <label for="carrito" onclick="obtenerCarrito()" id="carritoCompras">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              class="h-5 w-5"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="3"
+                d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"
+              />
+            </svg>
+          </label>
+
+          <!-- MODAL -->
+          <input type="checkbox" id="carrito" class="modal-toggle" />
+          <div class="modal">
+            <div class="modal-box w-11/12 max-w-5xl">
+              <!-- CUERPO DE EL MODAL-->
+              <h2 class="font-bold text-3xl text-center">
+                Informacion de Carrito de Compras
+              </h2>
+              <table class="table m-2 p-6" id="tablaCarrito">
+                <thead>
+                  <tr id="headTable">
+                    <th>Nombre</th>
+                    <th>Precio</th>
+                    <th>Cantidad</th>
+                    <th>Precio Total</th>
+                    <th></th>
+                  </tr>
+                </thead>
+                <tbody id="carritoC"></tbody>
+              </table>
+              <hr />
+              <h3 class="font-mono">
+                Total a Pagar Q<span class="stat-value" id="pagar">0</span>
+              </h3>
+              <div class="modal-action">
+                <div class='proceder'>
+                  Proceder al Pago
+              </div>
+                <label
+                  for="carrito"
+                  class="btn btn-error"
+                  id="eraser"
+                  onclick="Eraser()"
+                  >Cerrar</label
+                >
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Username -->
+        <button class="m-2 text-white gap-2" id="user">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            class="h-6 w-6"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"
+            />
+          </svg>
+          Username
+        </button>
+
+        <!-- CERRAR SESSON -->
+        <button
+          class="btn btn-outline btn-error text-white m-2"
+          onclick="logout()"
+          id="logout"
+        >
+          Cerrar Session
+        </button>
+        <!---->
+      </div>
+    </div>
+    <!---->
+
+    <div class="alert alert-info shadow-lg" id="alerta" role="alert">
+      <span
+        ><svg
+        xmlns="http://www.w3.org/2000/svg"
+        fill="none"
+        viewBox="0 0 24 24"
+        class="stroke-current flex-shrink-0 w-6 h-6"
+      >
+        <path
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="2"
+          d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+        ></path>
+      </svg><strong>Inicia Sesion</strong> o <strong>Registrate</strong> para
+        visualizar los Productos.</span
+      >
+    </div>
+
+
+    <div class="justify-center items-center h-screen dark:text-white">
+      <h1 class="mt-3 text-3xl font-bold font-mono animate-bounce text-center">
+        APIREST Django-Rest_Framework
+      </h1>
+      <table class="table table-zebra text-white datatable" id="tabla">
+        <thead>
+          <tr>
+            <th>Nombre</th>
+            <th>Descripcion</th>
+            <th>Precio</th>
+            <th>Añadir al Carrito</th>
+          </tr>
+        </thead>
+        <tbody id="celda"></tbody>
+      </table>
+
+      <!-- OBTENER TOKEN JWT-->
+      <!-- LOGIN -->
+      <label
+        for="mymodal"
+        class="btn btn-outline btn-success m-4 text-white"
+        id="obtener-token"
+        >Iniciar Sesion</label
+      >
+      <input type="checkbox" id="mymodal" class="modal-toggle" />
+      <div class="modal">
+        <div class="modal-box">
+          <h1 class="text-center font-mono font-bold text-2xl text-white">
+            Iniciar Sesion
+          </h1>
+          <input
+            type="text"
+            class="input input-bordered m-2 text-white"
+            placeholder="Username"
+            id="username"
+            name="username"
+            required
+          />
+          <input
+            type="password"
+            class="input input-bordered m-2 text-white"
+            placeholder="Password"
+            id="password"
+            name="password"
+            required
+          />
+          <br />
+          <button
+            type="submit"
+            class="btn btn-success text-white ml-2"
+            onclick="getToken()"
+          >
+            Enviar
+          </button>
+
+          <div class="modal-action">
+            <label for="mymodal" class="btn btn-error text-white">Cerrar</label>
+          </div>
+        </div>
+      </div>
+      <!---->
+
+      <!-- REGISTER -->
+      <label
+        class="btn btn-info btn-outline text-white m-4"
+        for="registrarme"
+        id="register"
+        >Registrarme</label
+      >
+      <input type="checkbox" id="registrarme" class="modal-toggle" />
+      <div class="modal">
+        <div class="modal-box">
+          <h2 class="text-center text-2xl text-white font-bold font-mono">
+            Registrarme
+          </h2>
+          <div class="flex flex-col">
+            <input
+              type="text"
+              id="registerusername"
+              name="registerusername"
+              class="input input-bordered m-1 text-white"
+              placeholder="Username"
+              required
+            />
+            <input
+              type="email"
+              id="registeremail"
+              name="registeremail"
+              class="input input-bordered m-1 text-white"
+              placeholder="Email"
+              required
+            />
+            <input
+              type="password"
+              id="registerpassword"
+              name="registerpassword"
+              class="input input-bordered m-1 text-white"
+              placeholder="Password"
+              required
+            />
+            <input
+              type="password"
+              id="registerrepeat"
+              name="registerrepeat"
+              class="input input-bordered m-1 text-white"
+              placeholder="Repeat Password"
+              required
+            />
+          </div>
+
+          <button
+            class="btn btn-info btn-outline text-white m-2"
+            onclick="registerUser()"
+          >
+            Registro
+          </button>
+
+          <div class="modal-action">
+            <label for="registrarme" class="btn btn-error text-white"
+              >Cancelar</label
+            >
+          </div>
+        </div>
+      </div>
+      <!---->
+
+      <h1 class="mt-3 text-2xl font-bold font-mono text-center" id="actToken">
+        Acciones con token
+      </h1>
+
+      <!-- VERIFICAR EXPIRACION DE TOKEN -->
+      <button
+        class="btn btn-secondary btn-outline text-white m-4"
+        onclick="verifyToken()"
+        id="tokenVerify"
+      >
+        Verificar expiracion de token
+      </button>
+
+      <!-- REFRESCAR TOKEN JWT-->
+      <button
+        class="btn btn-info btn-outline text-white m-4"
+        onclick="refreshToken()"
+        id="refreshT"
+      >
+        Refresh Token
+      </button>
+
+      <!-- MOSTRAR TOKEN JWT -->
+      <button
+        class="btn-success btn btn-outline text-white m-4"
+        onclick="showHeaders()"
+        id="showToken"
+      >
+        Ver Token
+      </button>
+    </div>
+
+    
+
+    <script src="https://www.paypal.com/sdk/js?client-id=AVwDIRtg-Io9_mJ7wJs-HnwSMc8cE68DMWTL5wW3osC8JomuNtlwPXfySwnQ25yO8VY19dQhXphFHi4C"></script>
+
+    <!-- SWEETALERT -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <!---->
+
+    <!-- JQUERY -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.4/js/dataTables.bootstrap5.min.js"></script>
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha2/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-qKXV1j0HvMUeCBQ+QVp7JcfGl760yU08IQ+GpUo5hlbpg51QRiuqHAJz8+BrxE/N"
+      crossorigin="anonymous"
+    ></script>
+    <!---->
+
+    <!-- CUSTOM SCRIPT JS-->
+    <script src="{% static '/js/index.js' %}"></script>
+    <!---->
+  </body>
+</html>

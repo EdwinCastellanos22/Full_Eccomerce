@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pago</title>
+</head>
+<body>
+    
+    {% for item in carrito %}
+        <h1>{{ item.producto.nombre }}</h1>
+        <h2>{{ item.producto.precio }}</h2>
+        <h3>{{ item.cantidad }}</h3>
+        <h4>{{ item.precio_total }}</h4>
+    {% endfor %}
+
+    <a href="/pago/paypal/">Pagar con paypal</a>
+    <a href="/pago/stripe/">Pagar con tarjeta</a>
+
+</body>
+</html>
