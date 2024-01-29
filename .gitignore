@@ -3,4 +3,4 @@
 ./ApiRest/settings.py
 .env
 db.sqlite3
-/ApiRest/settings.py
+ApiRest/settings.py
